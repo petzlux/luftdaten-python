@@ -24,7 +24,7 @@ logging.basicConfig(level=logging.INFO)
 dusty = SDS011('/dev/ttyUSB0')
 
 # Now we have some details about it
-print("SDS011 initialized: device_id={} firmware={}".format(dusty.device_id,dusty.firmware))
+logging.info("SDS011 initialized: device_id={} firmware={}".format(dusty.device_id,dusty.firmware))
 
 # Set dutycyle to nocycle (permanent)
 dusty.dutycycle = 0
@@ -98,11 +98,11 @@ def getSerial():
     raise Exception('CPU serial not found')
 
 def run():
-    print('Starting measurement')
+    logging.info('Starting measurement')
     m = Measurement()
-    print('Sending data to: http://www.madavi.de/sensor/graph.php?sensor={}-sds011'.format(sensorID))
-    print('pm2.5     = {:f} '.format(m.pm25_value))
-    print('pm10      = {:f} '.format(m.pm10_value))
+    logging.info('Sending data to: http://www.madavi.de/sensor/graph.php?sensor={}-sds011'.format(sensorID))
+    logging.info('pm2.5     = {:f} '.format(m.pm25_value))
+    logging.info('pm10      = {:f} '.format(m.pm10_value))
 
     m.sendLuftdaten()
     m.sendInflux()
@@ -112,8 +112,8 @@ sensorID  = config['luftdaten'].get('sensor') or ("raspi-" + getSerial())
 starttime = time.time()
 
 while True:
-    print("running ...")
+    logging.info("running ...")
     run()
     time.sleep(config['luftdaten'].get('sleepTime') - ((time.time() - starttime) % config['luftdaten'].get('sleepTime')))
 
-print("Stopped")
+logging.info("Stopped")
